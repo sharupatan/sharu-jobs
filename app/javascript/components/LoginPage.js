@@ -4,6 +4,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 const LoginPage = () => {
+  console.log('came to login')
+  localStorage.setItem('cred',JSON.stringify('asdfghjkl'))
   return (
     <Container>
       <Form>
