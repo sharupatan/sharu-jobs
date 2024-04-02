@@ -3,6 +3,7 @@ import { set, useForm } from "react-hook-form";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useSelector } from "react-redux"; 
 
 const getCsrfToken = () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -14,7 +15,8 @@ const redirect_user_to = (path) => {
 }
 
 const checkAuth = async () => {
-  const url = "http://localhost:3000/login_status";
+  const domain = useSelector((state)=>state.domain.value)
+  const url = `${domain}/login_status`;
   let isLogin = false;
   await fetch(url)
     .then((r) => r.json())
@@ -35,6 +37,7 @@ const privateRoute = async() => {
 };
 
 const LoginPage = () => {
+  const domain = useSelector((state)=>state.domain.value)
   const [loginStatus, setLoginStatus] = useState('');
   const {
     register,
@@ -51,7 +54,7 @@ const LoginPage = () => {
       email: data.email,
       password: data.password
     }
-    const url = 'http://localhost:3000/users/sign_in';
+    const url = `${domain}/users/sign_in`;
     const options = {
       method: 'POST',
       headers: { 'Content_Type': 'application/json', 'X-CSRF-Token': getCsrfToken()},

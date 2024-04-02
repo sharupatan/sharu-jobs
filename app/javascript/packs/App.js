@@ -8,28 +8,18 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
-import { HomePage, LoginPage, Navbars, SignupPage } from "../components";
-
-const checkAuth = async () => {
-  const url = "http://localhost:3000/login_status";
-  let isLogin = false;
-  await fetch(url)
-    .then((r) => r.json())
-    .then((d) => {
-      isLogin = d;
-    })
-    .catch((e) => console.log(e.message));
-  return isLogin;
-};
+import { HomePage, LoginPage, SignupPage } from "../components";
+import { useSelector } from "react-redux";
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const domain = useSelector((state)=>state.domain.value)
 
   useEffect(()=>{
     const checkUserAuth = async () => {
       try{
-        const url = 'http://localhost:3000/login_status'
+        const url = `${domain}/login_status`
         const response = await fetch(url)
         const isLogin = await response.json()
         setIsAuthenticated(isLogin)
