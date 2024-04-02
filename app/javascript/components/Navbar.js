@@ -10,8 +10,7 @@ const getCsrfToken = () => {
   return csrfToken;
 };
 
-const checkAuth = async () => {
-  const domain = useSelector((state)=>state.domain.value)
+const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
   let isLogin = false;
   await fetch(url)
@@ -25,7 +24,7 @@ const checkAuth = async () => {
 
 const Navbars = () => {
   const domain = useSelector((state)=>state.domain.value)
-  const [loginStatus, setLoginStatus] = useState(checkAuth())
+  const [loginStatus, setLoginStatus] = useState(checkAuth(domain))
   const handleLogout = () => {
     const url = `${domain}/users/sign_out`
     const options = {

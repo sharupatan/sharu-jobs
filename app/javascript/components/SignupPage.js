@@ -12,8 +12,7 @@ const getCsrfToken = () => {
   return csrfToken;
 };
 
-const checkAuth = async () => {
-  const domain = useSelector((state)=>state.domain.value)
+const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
   let isLogin = false;
   await fetch(url)
@@ -26,8 +25,8 @@ const checkAuth = async () => {
   return isLogin;
 };
 
-const privateRoute = async () => {
-  const isAuthenticated = await checkAuth();
+const privateRoute = async (domain) => {
+  const isAuthenticated = await checkAuth(domain);
   if (isAuthenticated) {
     window.location.replace("/");
   }
@@ -43,7 +42,7 @@ const SignupPage = () => {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   useEffect(() => {
-    privateRoute();
+    privateRoute(domain);
   }, []);
 
   const onSubmit = (data) => {

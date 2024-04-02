@@ -14,8 +14,7 @@ const redirect_user_to = (path) => {
   window.location.replace(path)
 }
 
-const checkAuth = async () => {
-  const domain = useSelector((state)=>state.domain.value)
+const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
   let isLogin = false;
   await fetch(url)
@@ -28,8 +27,8 @@ const checkAuth = async () => {
   return isLogin;
 };
 
-const privateRoute = async() => {
-  const isAuthenticated = await checkAuth();
+const privateRoute = async(domain) => {
+  const isAuthenticated = await checkAuth(domain);
   console.log(isAuthenticated,'in pr')
   if(isAuthenticated){
     redirect_user_to('/')
@@ -46,7 +45,7 @@ const LoginPage = () => {
   } = useForm({defaultValues:{email: '', password: ''}});
 
   useEffect(()=>{
-    privateRoute()
+    privateRoute(domain)
   },[])
 
   const onSubmit = (data) => {
