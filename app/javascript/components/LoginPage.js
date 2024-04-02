@@ -3,16 +3,13 @@ import { set, useForm } from "react-hook-form";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useSelector } from "react-redux"; 
+import { useSelector, useDispatch } from "react-redux";
+import { redirectTo,redirectToHome } from "../redux/slices/utilitiesSlice";
 
 const getCsrfToken = () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   return csrfToken;
 };
-
-const redirect_user_to = (path) => {
-  window.location.replace(path)
-}
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -23,20 +20,19 @@ const checkAuth = async (domain) => {
       isLogin = d;
     })
     .catch((e) => console.log(e.message));
-  console.log(isLogin,'in mtd')
   return isLogin;
 };
 
-const privateRoute = async(domain) => {
+const privateRoute = async(domain,dispatch) => {
   const isAuthenticated = await checkAuth(domain);
-  console.log(isAuthenticated,'in pr')
   if(isAuthenticated){
-    redirect_user_to('/')
+    dispatch(redirectToHome())
   }
 };
 
 const LoginPage = () => {
   const domain = useSelector((state)=>state.domain.value)
+  const dispatch = useDispatch()
   const [loginStatus, setLoginStatus] = useState('');
   const {
     register,
@@ -45,7 +41,7 @@ const LoginPage = () => {
   } = useForm({defaultValues:{email: '', password: ''}});
 
   useEffect(()=>{
-    privateRoute(domain)
+    privateRoute(domain,dispatch)
   },[])
 
   const onSubmit = (data) => {
@@ -68,7 +64,7 @@ const LoginPage = () => {
     }).then((data)=>{
       console.log(data)
       if(data?.data?.email){
-        redirect_user_to('/')
+        dispatch(redirectToHome())
       }else{
         setLoginStatus(data.message)      
       }
