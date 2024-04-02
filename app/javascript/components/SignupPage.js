@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { redirectToHome } from "../redux/slices/utilitiesSlice";
 
 const getCsrfToken = () => {
   const csrfToken = document
@@ -25,15 +26,16 @@ const checkAuth = async (domain) => {
   return isLogin;
 };
 
-const privateRoute = async (domain) => {
+const privateRoute = async (domain,dispatch) => {
   const isAuthenticated = await checkAuth(domain);
   if (isAuthenticated) {
-    window.location.replace("/");
+    dispatch(redirectToHome())
   }
 };
 
 const SignupPage = () => {
   const domain = useSelector((state)=>state.domain.value)
+  const dispatch = useDispatch()
   const [loginStatus, setLoginStatus] = useState("");
   const {
     register,
@@ -42,7 +44,7 @@ const SignupPage = () => {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   useEffect(() => {
-    privateRoute(domain);
+    privateRoute(domain,dispatch);
   }, []);
 
   const onSubmit = (data) => {
