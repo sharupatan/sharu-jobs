@@ -2,5 +2,6 @@ import HomePage from "./HomePage";
 import LoginPage from "./LoginPage";
 import Model from "./Model";
 import Navbars from "./Navbar";
+import SignupPage from "./SignupPage";
 
-export { HomePage, LoginPage, Model, Navbars };
+export { HomePage, LoginPage, Model, Navbars, SignupPage };

@@ -1,14 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 
+const getCsrfToken = () => {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  return csrfToken;
+};
+
+const checkAuth = async () => {
+  const url = "http://localhost:3000/login_status";
+  let isLogin = false;
+  await fetch(url)
+    .then((r) => r.json())
+    .then((d) => {
+      isLogin = d;
+    })
+    .catch((e) => console.log(e.message));
+  return isLogin;
+};
+
 const Navbars = () => {
-  const loginStatus = localStorage.getItem("cred");
+  const [loginStatus, setLoginStatus] = useState(checkAuth())
   const handleLogout = () => {
-    localStorage.removeItem('cred')
-    window.location.replace('/login')
+    const url = "http://localhost:3000/users/sign_out"
+    const options = {
+      method: 'DELETE',
+      headers: { 'Content_Type': 'application/json', 'X-CSRF-Token': getCsrfToken()},
+    }
+    fetch(url,options).then((r)=>r.json()).then((d)=>{
+      if(d?.status === 200){
+        window.location.replace('/')
+      }
+    }).catch((e)=>console.log(e.message))
   }
   return (
     <Navbar className="bg-dark navbar-dark">

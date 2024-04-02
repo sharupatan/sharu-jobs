@@ -1,9 +1,13 @@
 import React from "react";
+import Navbars from "./Navbar";
 
 const HomePage = () => {
-    return (
-        <h1>Home</h1>
-    )
-}
+  return (
+    <>
+      <Navbars />
+      <h1>Home</h1>
+    </>
+  );
+};
 
 export default HomePage;
