@@ -3,7 +3,8 @@ import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { redirectToHome } from "../redux/slices/utilitiesSlice";
 
 const getCsrfToken = () => {
   const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -24,6 +25,7 @@ const checkAuth = async (domain) => {
 
 const Navbars = () => {
   const domain = useSelector((state)=>state.domain.value)
+  const dispatch = useDispatch()
   const [loginStatus, setLoginStatus] = useState(checkAuth(domain))
   const handleLogout = () => {
     const url = `${domain}/users/sign_out`
@@ -33,7 +35,7 @@ const Navbars = () => {
     }
     fetch(url,options).then((r)=>r.json()).then((d)=>{
       if(d?.status === 200){
-        window.location.replace('/')
+        dispatch(redirectToHome())
       }
     }).catch((e)=>console.log(e.message))
   }
