@@ -33,7 +33,6 @@ const PrivateRoute = () => {
     checkUserAuth()
   },[])
 
-  console.log('pr triggered....!',isAuthenticated,loading)
   if(loading){
     return <div>Loading...</div>
   }
