@@ -25,7 +25,6 @@ class Users::SessionsController < Devise::SessionsController
   # DELETE /resource/sign_out
   def destroy
     currentUserstatus = current_user
-    debugger
     if currentUserstatus
       super do
         render json: {
