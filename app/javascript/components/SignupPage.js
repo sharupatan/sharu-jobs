@@ -6,13 +6,6 @@ import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 
-const getCsrfToken = () => {
-  const csrfToken = document
-    .querySelector('meta[name="csrf-token"]')
-    .getAttribute("content");
-  return csrfToken;
-};
-
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
   let isLogin = false;
@@ -22,20 +15,21 @@ const checkAuth = async (domain) => {
       isLogin = d;
     })
     .catch((e) => console.log(e.message));
-    console.log(isLogin)
+  console.log(isLogin);
   return isLogin;
 };
 
-const privateRoute = async (domain,dispatch) => {
+const privateRoute = async (domain, dispatch) => {
   const isAuthenticated = await checkAuth(domain);
   if (isAuthenticated) {
-    dispatch(redirectToHome())
+    dispatch(redirectToHome());
   }
 };
 
 const SignupPage = () => {
-  const domain = useSelector((state)=>state.domain.value)
-  const dispatch = useDispatch()
+  const domain = useSelector((state) => state.domain.value);
+  const csrf = useSelector((state) => state.utilities.value.csrfToken);
+  const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
   const {
     register,
@@ -44,7 +38,7 @@ const SignupPage = () => {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   useEffect(() => {
-    privateRoute(domain,dispatch);
+    privateRoute(domain, dispatch);
   }, []);
 
   const onSubmit = (data) => {
@@ -57,7 +51,7 @@ const SignupPage = () => {
       method: "POST",
       headers: {
         Content_Type: "application/json",
-        "X-CSRF-Token": getCsrfToken(),
+        "X-CSRF-Token": csrf,
       },
       body: JSON.stringify(payload),
     };

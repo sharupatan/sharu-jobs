@@ -6,11 +6,6 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 
-const getCsrfToken = () => {
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  return csrfToken;
-};
-
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
   let isLogin = false;
@@ -24,21 +19,25 @@ const checkAuth = async (domain) => {
 };
 
 const Navbars = () => {
-  const domain = useSelector((state)=>state.domain.value)
-  const dispatch = useDispatch()
-  const [loginStatus, setLoginStatus] = useState(checkAuth(domain))
+  const domain = useSelector((state) => state.domain.value);
+  const csrf = useSelector((state) => state.utilities.value.csrfToken);
+  const dispatch = useDispatch();
+  const [loginStatus, setLoginStatus] = useState(checkAuth(domain));
   const handleLogout = () => {
-    const url = `${domain}/users/sign_out`
+    const url = `${domain}/users/sign_out`;
     const options = {
-      method: 'DELETE',
-      headers: { 'Content_Type': 'application/json', 'X-CSRF-Token': getCsrfToken()},
-    }
-    fetch(url,options).then((r)=>r.json()).then((d)=>{
-      if(d?.status === 200){
-        dispatch(redirectToHome())
-      }
-    }).catch((e)=>console.log(e.message))
-  }
+      method: "DELETE",
+      headers: { Content_Type: "application/json", "X-CSRF-Token": csrf },
+    };
+    fetch(url, options)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.status === 200) {
+          dispatch(redirectToHome());
+        }
+      })
+      .catch((e) => console.log(e.message));
+  };
   return (
     <Navbar className="bg-dark navbar-dark">
       <Container>
@@ -50,7 +49,9 @@ const Navbars = () => {
             Login
           </Link>
         ) : (
-          <Button variant="danger" onClick={handleLogout}>Logout</Button>
+          <Button variant="danger" onClick={handleLogout}>
+            Logout
+          </Button>
         )}
 
         <Navbar.Toggle />

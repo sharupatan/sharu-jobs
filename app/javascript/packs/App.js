@@ -14,27 +14,27 @@ import { useSelector } from "react-redux";
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const domain = useSelector((state)=>state.domain.value)
+  const domain = useSelector((state) => state.domain.value);
 
-  useEffect(()=>{
+  useEffect(() => {
     const checkUserAuth = async () => {
-      try{
-        const url = `${domain}/login_status`
-        const response = await fetch(url)
-        const isLogin = await response.json()
-        setIsAuthenticated(isLogin)
-      } catch(e){
-        console.log(e.message)
-        setIsAuthenticated(false)
-      }finally{
-        setLoading(false)
+      try {
+        const url = `${domain}/login_status`;
+        const response = await fetch(url);
+        const isLogin = await response.json();
+        setIsAuthenticated(isLogin);
+      } catch (e) {
+        console.log(e.message);
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
       }
-    }
-    checkUserAuth()
-  },[])
+    };
+    checkUserAuth();
+  }, []);
 
-  if(loading){
-    return <div>Loading...</div>
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
