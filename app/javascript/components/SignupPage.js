@@ -16,7 +16,6 @@ const checkAuth = async (domain) => {
       isLogin = d;
     })
     .catch((e) => console.log(e.message));
-  console.log(isLogin);
   return Object.keys(isLogin).length > 0;
 };
 

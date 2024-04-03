@@ -11,7 +11,7 @@ const LoginPage = () => {
   const domain = useSelector((state) => state.domain.value);
   const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
-  const [loginProfile, setLoginProfile] = useState({});
+  const [loginStatus, setLoginStatus] = useState('');
   const [loading, setLoading] = useState(false)
   const {
     register,
@@ -22,7 +22,6 @@ const LoginPage = () => {
   const checkAuth = async () => {
     try{
       const url = `${domain}/login_status`;
-      // let isLogin = {};
       const res = await fetch(url)
       const data =await res.json()
   
@@ -65,7 +64,6 @@ const LoginPage = () => {
         }
       })
       .then((data) => {
-        console.log(data);
         if (data?.data?.email) {
           dispatch(redirectToHome());
         } else {
@@ -115,9 +113,9 @@ const LoginPage = () => {
           <Form.Check type="checkbox" label="Check me out" />
         </Form.Group>
         <Button type="submit">Submit</Button>
-        {/* {loginProfile !== "" && (
+        {loginStatus !== "" && (
           <span className="text-danger">{loginStatus}</span>
-        )} */}
+        )}
       </Form>
     </Container>
   );
