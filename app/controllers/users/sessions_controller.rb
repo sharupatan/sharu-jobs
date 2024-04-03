@@ -25,13 +25,16 @@ class Users::SessionsController < Devise::SessionsController
   # DELETE /resource/sign_out
   def destroy
     currentUserstatus = current_user
-    super do
-      if currentUserstatus
+    debugger
+    if currentUserstatus
+      super do
         render json: {
           status: 200,
           message: 'Logged out successfully.'
         }
-      else
+      end
+    else
+      super do
         render json: {
           status: 401,
           message: "Couldn't find an active session."
@@ -50,18 +53,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def respond_to_on_destroy
-    # debugger
-    # if currentUserstatus
-    #   render json: {
-    #     status: 200,
-    #     message: 'Logged out successfully.'
-    #   }
-    # else
-    #   render json: {
-    #     status: 401,
-    #     message: "Couldn't find an active session."
-    #   }
-    # end
   end
 
   # protected

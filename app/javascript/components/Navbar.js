@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button,Spinner } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
@@ -8,21 +8,32 @@ import { redirectToHome } from "../redux/slices/utilitiesSlice";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
-  let isLogin = false;
+  let loginProfile = {};
   await fetch(url)
     .then((r) => r.json())
     .then((d) => {
-      isLogin = d;
+      loginProfile = d;
     })
     .catch((e) => console.log(e.message));
-  return isLogin;
+  return loginProfile;
 };
 
 const Navbars = () => {
   const domain = useSelector((state) => state.domain.value);
   const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
-  const [loginStatus, setLoginStatus] = useState(checkAuth(domain));
+  const [loading, setLoading] = useState(true);
+  const [loginProfile, setLoginProfile] = useState({ email: "not defined" });
+
+  useEffect(() => {
+    const getprofile = async () => {
+      const profile = await checkAuth(domain);
+      setLoading(false);
+      setLoginProfile(profile);
+    }
+    getprofile()
+  }, []);
+
   const handleLogout = () => {
     const url = `${domain}/users/sign_out`;
     const options = {
@@ -44,22 +55,28 @@ const Navbars = () => {
         <Link to="/" className="btn btn-primary me-2">
           Sharu Jobs
         </Link>
-        {loginStatus === null ? (
-          <Link to="/login" className="btn btn-secondary">
-            Login
-          </Link>
-        ) : (
-          <Button variant="danger" onClick={handleLogout}>
-            Logout
-          </Button>
-        )}
-
+        <Button variant="danger" onClick={handleLogout}>
+          Logout
+        </Button>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           <Navbar.Text>
             Signed in as:{" "}
             <Link to="/" className="btn badge badge-info">
-              Sharu khan
+              {loading ? (
+                <Button variant="primary" disabled>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  <span className="visually-hidden">Loading...</span>
+                </Button>
+              ) : (
+                loginProfile.name || loginProfile.email
+              )}
             </Link>
           </Navbar.Text>
         </Navbar.Collapse>

@@ -17,20 +17,26 @@ const PrivateRoute = () => {
   const [loading, setLoading] = useState(true);
   const domain = useSelector((state) => state.domain.value);
 
-  useEffect(() => {
-    const checkUserAuth = async () => {
-      try {
-        const url = `${domain}/login_status`;
-        const response = await fetch(url);
-        const isLogin = await response.json();
-        setIsAuthenticated(isLogin);
-      } catch (e) {
-        console.log(e.message);
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
+  const checkUserAuth = async () => {
+    try {
+      const url = `${domain}/login_status`;
+      const response =await fetch(url)
+      const res =await response.json()
+      if(res && Object.keys(res).length > 0){
+        setIsAuthenticated(true);
       }
-    };
+      console.log(Object.keys(res).length)
+      console.log(res)
+    } catch (e) {
+      console.log('error')
+      console.log(e.message);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     checkUserAuth();
   }, []);
 

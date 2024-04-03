@@ -7,39 +7,40 @@ import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
 
-const checkAuth = async (domain) => {
-  const url = `${domain}/login_status`;
-  let isLogin = false;
-  await fetch(url)
-    .then((r) => r.json())
-    .then((d) => {
-      isLogin = d;
-    })
-    .catch((e) => console.log(e.message));
-  return isLogin;
-};
-
-const privateRoute = async (domain, dispatch) => {
-  const isAuthenticated = await checkAuth(domain);
-  if (isAuthenticated) {
-    dispatch(redirectToHome());
-  }
-};
-
 const LoginPage = () => {
   const domain = useSelector((state) => state.domain.value);
   const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
-  const [loginStatus, setLoginStatus] = useState("");
-  const [loading, setLoading] = useState(true)
+  const [loginProfile, setLoginProfile] = useState({});
+  const [loading, setLoading] = useState(false)
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues: { email: "", password: "" } });
 
+  const checkAuth = async () => {
+    try{
+      const url = `${domain}/login_status`;
+      // let isLogin = {};
+      const res = await fetch(url)
+      const data =await res.json()
+  
+      return Object.keys(data).length > 0
+    }catch(e){
+      console.log(e.message)
+    }
+  };
+
+  const privateRoute = async () => {
+    const isAuthenticated =await checkAuth();
+    if (isAuthenticated) {
+      dispatch(redirectToHome());
+    }
+  };
+
   useEffect(() => {
-    privateRoute(domain, dispatch);
+    privateRoute();
     setLoading(false)
   }, []);
 
@@ -114,9 +115,9 @@ const LoginPage = () => {
           <Form.Check type="checkbox" label="Check me out" />
         </Form.Group>
         <Button type="submit">Submit</Button>
-        {loginStatus !== "" && (
+        {/* {loginProfile !== "" && (
           <span className="text-danger">{loginStatus}</span>
-        )}
+        )} */}
       </Form>
     </Container>
   );

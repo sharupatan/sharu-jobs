@@ -9,7 +9,7 @@ import Loader from "./Loader";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
-  let isLogin = false;
+  let isLogin = {};
   await fetch(url)
     .then((r) => r.json())
     .then((d) => {
@@ -17,7 +17,7 @@ const checkAuth = async (domain) => {
     })
     .catch((e) => console.log(e.message));
   console.log(isLogin);
-  return isLogin;
+  return Object.keys(isLogin).length > 0;
 };
 
 const privateRoute = async (domain, dispatch) => {
