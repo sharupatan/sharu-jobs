@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
+import Loader from "./Loader";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -31,6 +32,7 @@ const SignupPage = () => {
   const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
+  const [loading,setLoading] = useState(true)
   const {
     register,
     handleSubmit,
@@ -39,6 +41,7 @@ const SignupPage = () => {
 
   useEffect(() => {
     privateRoute(domain, dispatch);
+    setLoading(false)
   }, []);
 
   const onSubmit = (data) => {
@@ -66,7 +69,10 @@ const SignupPage = () => {
       .then((data) => console.log(data))
       .catch((e) => setLoginStatus(e.message));
   };
-
+  
+  if(loading){
+    return <Loader/>
+  }
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>

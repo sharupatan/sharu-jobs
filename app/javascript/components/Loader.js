@@ -1,7 +1,7 @@
 import React from "react";
 
 const Loader = () => (
-  <div className="w-100">
+  <div className="w-100 d-flex flex-row justify-content-center mt-5">
     <div className="spinner-grow text-primary" role="status">
       <span className="visually-hidden">Loading...</span>
     </div>
