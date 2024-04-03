@@ -65,7 +65,14 @@ const SignupPage = () => {
           return await res.json();
         }
       })
-      .then((data) => console.log(data))
+      .then((data) => {
+        if(data?.status?.message.length > 0){
+          setLoginStatus(data?.status?.message.join(','))
+        }else{
+          dispatch(redirectToHome());
+        }
+      }
+        )
       .catch((e) => setLoginStatus(e.message));
   };
   
