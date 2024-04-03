@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { HomePage, LoginPage, SignupPage } from "../components";
 import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,7 +35,7 @@ const PrivateRoute = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
 
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
