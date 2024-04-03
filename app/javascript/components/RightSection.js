@@ -30,8 +30,8 @@ const RightSection = () => {
     <div>
       <h4 className="text-center">News</h4>
       <ListGroup variant="flush" as="ol" numbered>
-        {news.map((item) => (
-          <ListGroup.Item as="li">{item.title}</ListGroup.Item>
+        {news.map((item,index) => (
+          <ListGroup.Item as="li" key={index}>{item.title}</ListGroup.Item>
         ))}
       </ListGroup>
     </div>

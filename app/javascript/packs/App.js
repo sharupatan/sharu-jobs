@@ -25,10 +25,7 @@ const PrivateRoute = () => {
       if(res && Object.keys(res).length > 0){
         setIsAuthenticated(true);
       }
-      console.log(Object.keys(res).length)
-      console.log(res)
     } catch (e) {
-      console.log('error')
       console.log(e.message);
       setIsAuthenticated(false);
     } finally {
