@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const domain = useSelector((state) => state.domain.value);
@@ -117,6 +118,9 @@ const LoginPage = () => {
           <span className="text-danger">{loginStatus}</span>
         )}
       </Form>
+      <Link to="/register" className="btn btn-primary mt-3">
+          Signup
+      </Link>
     </Container>
   );
 };

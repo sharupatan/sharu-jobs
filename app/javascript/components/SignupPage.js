@@ -6,6 +6,7 @@ import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -120,6 +121,9 @@ const SignupPage = () => {
           <span className="text-danger">{loginStatus}</span>
         )}
       </Form>
+      <Link to="/login" className="btn btn-primary mt-3">
+          Login
+      </Link>
     </Container>
   );
 };
