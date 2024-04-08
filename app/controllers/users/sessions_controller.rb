@@ -11,14 +11,27 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    email, password = JSON.parse(request.body.read).values_at('email', 'password')
-    user = User.find_by(email: email)
+    email, password, isGoogleAuthorised = JSON.parse(request.body.read).values_at('email', 'password','isGoogleAuthorised')
 
-    if user && user.valid_password?(password)
-      sign_in user
-      respond_with user
+    if isGoogleAuthorised
+      user = User.find_by(email: email)
+      if user
+        sign_in user
+        respond_with user
+      else
+        user = User.create(email: email, password: '123456')
+        sign_in user
+        respond_with user
+      end
     else
-      render json: {message: 'Unauthorised!'}
+      user = User.find_by(email: email)
+
+      if user && user.valid_password?(password)
+        sign_in user
+        respond_with user
+      else
+        render json: {message: 'Unauthorised!'}
+      end
     end
   end
 

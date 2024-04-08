@@ -7,13 +7,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 
 const LoginPage = () => {
+  const [user, setUser] = useState({});
+  const [profile, setProfile] = useState({});
   const domain = useSelector((state) => state.domain.value);
   const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
-  const [loginStatus, setLoginStatus] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [loginStatus, setLoginStatus] = useState("");
+  const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -21,28 +24,86 @@ const LoginPage = () => {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   const checkAuth = async () => {
-    try{
+    try {
       const url = `${domain}/login_status`;
-      const res = await fetch(url)
-      const data =await res.json()
-  
-      return Object.keys(data).length > 0
-    }catch(e){
-      console.log(e.message)
+      const res = await fetch(url);
+      const data = await res.json();
+
+      return Object.keys(data).length > 0;
+    } catch (e) {
+      console.log(e.message);
     }
   };
 
   const privateRoute = async () => {
-    const isAuthenticated =await checkAuth();
+    const isAuthenticated = await checkAuth();
     if (isAuthenticated) {
       dispatch(redirectToHome());
     }
   };
 
+  const saveProfileData = (d) => {
+    const payload = {
+      email: d?.email,
+      isGoogleAuthorised: d?.email,
+    };
+    const url = `${domain}/users/sign_in`;
+    const options = {
+      method: "POST",
+      headers: { Content_Type: "application/json", "X-CSRF-Token": csrf },
+      body: JSON.stringify(payload),
+    };
+    fetch(url, options)
+      .then(async (res) => {
+        if (res.status !== 200) {
+          throw new Error(await res.text());
+        } else {
+          return await res.json();
+        }
+      })
+      .then((data) => {
+        if (data?.data?.email) {
+          dispatch(redirectToHome());
+        } else {
+          setLoginStatus(data.message);
+        }
+      })
+      .catch((e) => console.log(e.message));
+  };
+
   useEffect(() => {
-    privateRoute();
-    setLoading(false)
-  }, []);
+    if (user?.access_token) {
+      const url = `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`;
+      const options = {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+          Accept: "application/json",
+        },
+      };
+      fetch(url, options)
+        .then((res) => res.json())
+        .then((d) => {
+          saveProfileData(d);
+        })
+        .catch((e) => console.log(e));
+    }
+
+    setLoading(false);
+  }, [user]);
+
+  useEffect(()=>{
+    privateRoute()
+  },[])
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log("login failed", error),
+  });
+
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+  };
 
   const onSubmit = (data) => {
     const payload = {
@@ -74,8 +135,8 @@ const LoginPage = () => {
       .catch((e) => console.log(e.message));
   };
 
-  if(loading){
-    return <Loader />
+  if (loading) {
+    return <Loader />;
   }
   return (
     <Container>
@@ -118,9 +179,11 @@ const LoginPage = () => {
           <span className="text-danger">{loginStatus}</span>
         )}
       </Form>
-      <Link to="/register" className="btn btn-primary mt-3">
-          Signup
+      <hr />
+      <Link to="/register" className="btn btn-primary mt-3 mb-2">
+        Signup
       </Link>
+      <button onClick={login}>Sign in with Google 🚀 </button>
     </Container>
   );
 };
