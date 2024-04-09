@@ -68,3 +68,4 @@ end
 
 gem 'webpacker'
 gem 'devise'
+gem 'passgen'

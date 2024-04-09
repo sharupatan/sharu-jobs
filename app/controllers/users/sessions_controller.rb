@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'rubygems'
+require 'passgen'
 
 class Users::SessionsController < Devise::SessionsController
   respond_to :json
@@ -19,7 +21,7 @@ class Users::SessionsController < Devise::SessionsController
         sign_in user
         respond_with user
       else
-        user = User.create(email: email, password: '123456')
+        user = User.create(email: email, password: Passgen::generate(length: 10))
         sign_in user
         respond_with user
       end
