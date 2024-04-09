@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { redirectToHome } from "../redux/slices/utilitiesSlice";
+import { redirect_root_path } from "./utilities/redirections";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -44,7 +44,7 @@ const Navbars = () => {
       .then((r) => r.json())
       .then((d) => {
         if (d?.status === 200) {
-          dispatch(redirectToHome());
+          redirect_root_path();
         }
       })
       .catch((e) => console.log(e.message));

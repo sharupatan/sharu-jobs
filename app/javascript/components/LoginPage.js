@@ -4,10 +4,10 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
-import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import {redirect_root_path} from './utilities/redirections'
 
 const LoginPage = () => {
   const [user, setUser] = useState({});
@@ -38,7 +38,7 @@ const LoginPage = () => {
   const privateRoute = async () => {
     const isAuthenticated = await checkAuth();
     if (isAuthenticated) {
-      dispatch(redirectToHome());
+      redirect_root_path()
     }
   };
 
@@ -63,7 +63,7 @@ const LoginPage = () => {
       })
       .then((data) => {
         if (data?.data?.email) {
-          dispatch(redirectToHome());
+          redirect_root_path();
         } else {
           setLoginStatus(data.message);
         }
@@ -127,7 +127,7 @@ const LoginPage = () => {
       })
       .then((data) => {
         if (data?.data?.email) {
-          dispatch(redirectToHome());
+          redirect_root_path();
         } else {
           setLoginStatus(data.message);
         }

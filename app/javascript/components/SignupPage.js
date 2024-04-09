@@ -4,9 +4,9 @@ import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useSelector, useDispatch } from "react-redux";
-import { redirectToHome } from "../redux/slices/utilitiesSlice";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
+import { redirect_root_path } from "./utilities/redirections";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -23,7 +23,7 @@ const checkAuth = async (domain) => {
 const privateRoute = async (domain, dispatch) => {
   const isAuthenticated = await checkAuth(domain);
   if (isAuthenticated) {
-    dispatch(redirectToHome());
+    redirect_root_path();
   }
 };
 
@@ -70,7 +70,7 @@ const SignupPage = () => {
         if(data?.status?.message.length > 0){
           setLoginStatus(data?.status?.message.join(','))
         }else{
-          dispatch(redirectToHome());
+          redirect_root_path();
         }
       }
         )
