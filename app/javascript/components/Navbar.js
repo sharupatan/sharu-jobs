@@ -3,12 +3,12 @@ import { Button,Spinner } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
 import { redirect_root_path } from "./utilities/redirections";
 import { get_csrf_token } from "./utilities/tokens";
+import { DOMAIN } from "./utilities/navigations";
 
-const checkAuth = async (domain) => {
-  const url = `${domain}/login_status`;
+const checkAuth = async () => {
+  const url = `${DOMAIN}/login_status`;
   let loginProfile = {};
   await fetch(url)
     .then((r) => r.json())
@@ -20,14 +20,12 @@ const checkAuth = async (domain) => {
 };
 
 const Navbars = () => {
-  const domain = useSelector((state) => state.domain.value);
-  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [loginProfile, setLoginProfile] = useState({ email: "not defined" });
 
   useEffect(() => {
     const getprofile = async () => {
-      const profile = await checkAuth(domain);
+      const profile = await checkAuth();
       setLoading(false);
       setLoginProfile(profile);
     }
@@ -35,7 +33,7 @@ const Navbars = () => {
   }, []);
 
   const handleLogout = () => {
-    const url = `${domain}/users/sign_out`;
+    const url = `${DOMAIN}/users/sign_out`;
     const options = {
       method: "DELETE",
       headers: { Content_Type: "application/json", "X-CSRF-Token": get_csrf_token() },

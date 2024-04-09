@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useSelector, useDispatch } from "react-redux";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { redirect_root_path } from "./utilities/redirections";
 import { get_csrf_token } from "./utilities/tokens";
+import { DOMAIN } from "./utilities/navigations";
 
-const checkAuth = async (domain) => {
-  const url = `${domain}/login_status`;
+const checkAuth = async () => {
+  const url = `${DOMAIN}/login_status`;
   let isLogin = {};
   await fetch(url)
     .then((r) => r.json())
@@ -21,16 +21,14 @@ const checkAuth = async (domain) => {
   return Object.keys(isLogin).length > 0;
 };
 
-const privateRoute = async (domain, dispatch) => {
-  const isAuthenticated = await checkAuth(domain);
+const privateRoute = async () => {
+  const isAuthenticated = await checkAuth();
   if (isAuthenticated) {
     redirect_root_path();
   }
 };
 
 const SignupPage = () => {
-  const domain = useSelector((state) => state.domain.value);
-  const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
   const [loading,setLoading] = useState(true)
   const {
@@ -40,7 +38,7 @@ const SignupPage = () => {
   } = useForm({ defaultValues: { email: "", password: "" } });
 
   useEffect(() => {
-    privateRoute(domain, dispatch);
+    privateRoute();
     setLoading(false)
   }, []);
 
@@ -49,7 +47,7 @@ const SignupPage = () => {
       email: data.email,
       password: data.password,
     };
-    const url = `${domain}/users`;
+    const url = `${DOMAIN}/users`;
     const options = {
       method: "POST",
       headers: {

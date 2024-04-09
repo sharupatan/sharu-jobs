@@ -9,17 +9,16 @@ import {
   Navigate,
 } from "react-router-dom";
 import { HomePage, LoginPage, SignupPage } from "../components";
-import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
+import { DOMAIN } from "../components/utilities/navigations";
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const domain = useSelector((state) => state.domain.value);
 
   const checkUserAuth = async () => {
     try {
-      const url = `${domain}/login_status`;
+      const url = `${DOMAIN}/login_status`;
       const response =await fetch(url)
       const res =await response.json()
       if(res && Object.keys(res).length > 0){

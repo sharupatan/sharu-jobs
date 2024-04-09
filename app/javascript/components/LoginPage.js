@@ -3,18 +3,16 @@ import { useForm } from "react-hook-form";
 import { Container } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useSelector, useDispatch } from "react-redux";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import {redirect_root_path} from './utilities/redirections'
 import {get_csrf_token} from './utilities/tokens'
+import { DOMAIN } from "./utilities/navigations";
 
 const LoginPage = () => {
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
-  const domain = useSelector((state) => state.domain.value);
-  const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const {
@@ -25,7 +23,7 @@ const LoginPage = () => {
 
   const checkAuth = async () => {
     try {
-      const url = `${domain}/login_status`;
+      const url = `${DOMAIN}/login_status`;
       const res = await fetch(url);
       const data = await res.json();
 
@@ -47,7 +45,7 @@ const LoginPage = () => {
       email: d?.email,
       isGoogleAuthorised: d?.email,
     };
-    const url = `${domain}/users/sign_in`;
+    const url = `${DOMAIN}/users/sign_in`;
     const options = {
       method: "POST",
       headers: { Content_Type: "application/json", "X-CSRF-Token": get_csrf_token() },
@@ -110,7 +108,7 @@ const LoginPage = () => {
       email: data.email,
       password: data.password,
     };
-    const url = `${domain}/users/sign_in`;
+    const url = `${DOMAIN}/users/sign_in`;
 
     const options = {
       method: "POST",
