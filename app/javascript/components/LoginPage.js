@@ -8,12 +8,12 @@ import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import {redirect_root_path} from './utilities/redirections'
+import {get_csrf_token} from './utilities/tokens'
 
 const LoginPage = () => {
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
   const domain = useSelector((state) => state.domain.value);
-  const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,7 @@ const LoginPage = () => {
     const url = `${domain}/users/sign_in`;
     const options = {
       method: "POST",
-      headers: { Content_Type: "application/json", "X-CSRF-Token": csrf },
+      headers: { Content_Type: "application/json", "X-CSRF-Token": get_csrf_token() },
       body: JSON.stringify(payload),
     };
     fetch(url, options)
@@ -114,7 +114,7 @@ const LoginPage = () => {
 
     const options = {
       method: "POST",
-      headers: { Content_Type: "application/json", "X-CSRF-Token": csrf },
+      headers: { Content_Type: "application/json", "X-CSRF-Token": get_csrf_token() },
       body: JSON.stringify(payload),
     };
     fetch(url, options)

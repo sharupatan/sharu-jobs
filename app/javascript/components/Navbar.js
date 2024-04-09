@@ -5,6 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { redirect_root_path } from "./utilities/redirections";
+import { get_csrf_token } from "./utilities/tokens";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -20,7 +21,6 @@ const checkAuth = async (domain) => {
 
 const Navbars = () => {
   const domain = useSelector((state) => state.domain.value);
-  const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
   const [loginProfile, setLoginProfile] = useState({ email: "not defined" });
@@ -38,7 +38,7 @@ const Navbars = () => {
     const url = `${domain}/users/sign_out`;
     const options = {
       method: "DELETE",
-      headers: { Content_Type: "application/json", "X-CSRF-Token": csrf },
+      headers: { Content_Type: "application/json", "X-CSRF-Token": get_csrf_token() },
     };
     fetch(url, options)
       .then((r) => r.json())

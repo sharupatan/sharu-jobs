@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { redirect_root_path } from "./utilities/redirections";
+import { get_csrf_token } from "./utilities/tokens";
 
 const checkAuth = async (domain) => {
   const url = `${domain}/login_status`;
@@ -29,7 +30,6 @@ const privateRoute = async (domain, dispatch) => {
 
 const SignupPage = () => {
   const domain = useSelector((state) => state.domain.value);
-  const csrf = useSelector((state) => state.utilities.value.csrfToken);
   const dispatch = useDispatch();
   const [loginStatus, setLoginStatus] = useState("");
   const [loading,setLoading] = useState(true)
@@ -54,7 +54,7 @@ const SignupPage = () => {
       method: "POST",
       headers: {
         Content_Type: "application/json",
-        "X-CSRF-Token": csrf,
+        "X-CSRF-Token": get_csrf_token(),
       },
       body: JSON.stringify(payload),
     };
