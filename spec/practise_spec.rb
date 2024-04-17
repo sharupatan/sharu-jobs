@@ -76,3 +76,15 @@ describe Run do
         it { is_expected.to respond_to(:timestamp)}
     end
 end
+
+describe 'Let Helper' do
+    let(:py) do
+        3.14
+    end
+
+    context 'given 3.14' do
+        it 'returns 3.14' do
+            expect(py).to eq(3.14)
+        end
+    end
+end
