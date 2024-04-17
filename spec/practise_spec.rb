@@ -88,3 +88,14 @@ describe 'Let Helper' do
         end
     end
 end
+
+class DivisionError < StandardError
+end
+
+describe 'Exceptions' do
+    context 'made custom error' do
+        it 'generate division error' do
+            expect{raise DivisionError,'division error'}.to raise_error('division error')
+        end
+    end
+end
