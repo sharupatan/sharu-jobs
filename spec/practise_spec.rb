@@ -44,3 +44,35 @@ describe StringCalculator do
         end
     end
 end
+
+class Run
+    def initialize(duration, distance, timestamp)
+        @duration = duration
+        @distance = distance
+        @timestamp = timestamp
+    end
+
+    def duration
+        @duration
+    end
+
+    def distance
+        @distance
+    end
+
+    def timestamp
+        @timestamp
+    end
+end
+
+describe Run do
+    describe 'attributes' do
+        subject do
+            Run.new(32, 5.2,'2014-12-22 20:30')
+        end
+
+        it { is_expected.to respond_to(:duration)}
+        it { is_expected.to respond_to(:distance)}
+        it { is_expected.to respond_to(:timestamp)}
+    end
+end
