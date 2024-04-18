@@ -9,6 +9,7 @@ import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import {redirect_root_path} from './utilities/redirections'
 import {get_csrf_token} from './utilities/tokens'
 import { DOMAIN } from "./utilities/navigations";
+import verify_user from "./utilities/authenticate";
 
 const LoginPage = () => {
   const [user, setUser] = useState({});
@@ -21,20 +22,8 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({ defaultValues: { email: "", password: "" } });
 
-  const checkAuth = async () => {
-    try {
-      const url = `${DOMAIN}/login_status`;
-      const res = await fetch(url);
-      const data = await res.json();
-
-      return Object.keys(data).length > 0;
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
   const privateRoute = async () => {
-    const isAuthenticated = await checkAuth();
+    const isAuthenticated = await verify_user();
     if (isAuthenticated) {
       redirect_root_path()
     }
