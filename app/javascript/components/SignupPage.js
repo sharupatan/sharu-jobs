@@ -61,7 +61,7 @@ const SignupPage = () => {
         }
       }
         )
-      .catch((e) => setLoginStatus(e.message));
+      .catch((e) =>{console.log(e.message); setLoginStatus(e.message)});
   };
   
   if(loading){
@@ -111,6 +111,31 @@ const SignupPage = () => {
       <Link to="/login" className="btn btn-primary mt-3">
           Login
       </Link>
+
+      <hr/>
+
+      {/* <div className="form-container mb-4">
+        <p className="heading">Confirm your email</p>
+        <p className="content">
+          We have sent OTP to registered email, please confirm your email
+        </p>
+
+        <form onSubmit={handleValidateOTP}>
+          <input type="hidden" name="id" value={user.id} />
+
+          <input type="text" name="otp" placeholder="Type OTP" />
+
+          <button type="submit">Validate OTP</button>
+        </form>
+
+        <form onSubmit={handleResendOTP}>
+          <input type="hidden" name="id" value={user.id} />
+
+          <p className="text-center p-2 d-flex">
+            <button type="submit" style={{ color: '#0073ff', background: 'none' }}>Resend OTP</button>
+          </p>
+        </form>
+      </div> */}
     </Container>
   );
 };

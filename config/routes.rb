@@ -15,5 +15,8 @@ Rails.application.routes.draw do
 
   get "/login_status", to: 'application#loginStatus'
 
+  get "/validate", to: 'confirmations#validate_otp'
+  get "/resend", to: 'confirmations#resend'
+
   get "/*path" ,to: "tests#index"
 end
