@@ -6,18 +6,7 @@ import { Link } from "react-router-dom";
 import { redirect_root_path } from "./utilities/redirections";
 import { get_csrf_token } from "./utilities/tokens";
 import { DOMAIN } from "./utilities/navigations";
-
-const checkAuth = async () => {
-  const url = `${DOMAIN}/login_status`;
-  let loginProfile = {};
-  await fetch(url)
-    .then((r) => r.json())
-    .then((d) => {
-      loginProfile = d;
-    })
-    .catch((e) => console.log(e.message));
-  return loginProfile;
-};
+import verify_user from "./utilities/authenticate";
 
 const Navbars = () => {
   const [loading, setLoading] = useState(true);
@@ -25,7 +14,7 @@ const Navbars = () => {
 
   useEffect(() => {
     const getprofile = async () => {
-      const profile = await checkAuth();
+      const profile = await verify_user(true);
       setLoading(false);
       setLoginProfile(profile);
     }

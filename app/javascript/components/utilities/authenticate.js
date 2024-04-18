@@ -1,11 +1,12 @@
 import { DOMAIN } from "./navigations";
 
-const verify_user = async () => {
+const verify_user = async (needProfile) => {
   const url = `${DOMAIN}/login_status`;
-  return await fetch(url)
+  const result = await fetch(url)
     .then((res) => res.json())
-    .then((data) => Object.keys(data).length > 0)
+    .then((data) => (needProfile ? data : Object.keys(data).length > 0))
     .catch((e) => console.log(e.message));
+  return result;
 };
 
 export default verify_user;
