@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import { HomePage, LoginPage, SignupPage } from "../components";
 import Loader from "../components/Loader";
-import { DOMAIN } from "../components/utilities/navigations";
+import verify_user from "../components/utilities/authenticate";
 
 const PrivateRoute = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -18,10 +18,8 @@ const PrivateRoute = () => {
 
   const checkUserAuth = async () => {
     try {
-      const url = `${DOMAIN}/login_status`;
-      const response =await fetch(url)
-      const res =await response.json()
-      if(res && Object.keys(res).length > 0){
+      const clientLoginStatus = await verify_user()
+      if(clientLoginStatus){
         setIsAuthenticated(true);
       }
     } catch (e) {
