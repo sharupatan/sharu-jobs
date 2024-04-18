@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
-import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import {redirect_root_path} from './utilities/redirections'
 import {get_csrf_token} from './utilities/tokens'
 import { DOMAIN } from "./utilities/navigations";
@@ -13,7 +13,6 @@ import verify_user from "./utilities/authenticate";
 
 const LoginPage = () => {
   const [user, setUser] = useState({});
-  const [profile, setProfile] = useState({});
   const [loginStatus, setLoginStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const {
@@ -86,11 +85,6 @@ const LoginPage = () => {
     onSuccess: (codeResponse) => setUser(codeResponse),
     onError: (error) => console.log("login failed", error),
   });
-
-  const logOut = () => {
-    googleLogout();
-    setProfile(null);
-  };
 
   const onSubmit = (data) => {
     const payload = {
