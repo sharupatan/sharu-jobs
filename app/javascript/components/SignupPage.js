@@ -8,21 +8,10 @@ import { Link } from "react-router-dom";
 import { redirect_root_path } from "./utilities/redirections";
 import { get_csrf_token } from "./utilities/tokens";
 import { DOMAIN } from "./utilities/navigations";
-
-const checkAuth = async () => {
-  const url = `${DOMAIN}/login_status`;
-  let isLogin = {};
-  await fetch(url)
-    .then((r) => r.json())
-    .then((d) => {
-      isLogin = d;
-    })
-    .catch((e) => console.log(e.message));
-  return Object.keys(isLogin).length > 0;
-};
+import verify_user from "./utilities/authenticate";
 
 const privateRoute = async () => {
-  const isAuthenticated = await checkAuth();
+  const isAuthenticated = await verify_user();
   if (isAuthenticated) {
     redirect_root_path();
   }
